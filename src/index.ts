@@ -45,3 +45,15 @@ client.on(Events.MessageDelete, async (message) => {
 })
 
 client.login(env.DISCORD_ACCESS_TOKEN)
+
+// This is a hack to keep the server alive in render.com
+setInterval(() => {
+  fetch(env.SERVER_URL)
+}, env.PING_INTERVAL)
+
+Bun.serve({
+  port: 3000,
+  fetch() {
+    return new Response('ok')
+  },
+})
