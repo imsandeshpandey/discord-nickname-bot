@@ -4,7 +4,6 @@ import {
   Events,
   GatewayIntentBits,
 } from 'discord.js'
-import { env } from 'env'
 import {
   activeVotes,
   handleNicknameVoteCommand,
@@ -44,16 +43,17 @@ client.on(Events.MessageDelete, async (message) => {
   voteTracker?.cancelVote()
 })
 
-client.login(env.DISCORD_ACCESS_TOKEN)
+client.login(process.env.DISCORD_ACCESS_TOKEN)
 
 // This is a hack to keep the server alive in render.com
 setInterval(() => {
-  fetch(env.SERVER_URL)
-}, env.PING_INTERVAL)
+  fetch(process.env.SERVER_URL!)
+}, Number(process.env.PING_INTERVAL))
 
 Bun.serve({
   port: 3000,
   fetch() {
+    console.log('Pinged')
     return new Response('ok')
   },
 })

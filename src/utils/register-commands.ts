@@ -1,5 +1,4 @@
 import { REST, Routes, SlashCommandBuilder } from 'discord.js'
-import { env } from 'env'
 
 export enum Command {
   Nickname = 'nickname',
@@ -33,13 +32,15 @@ export const commands = [
     .toJSON(),
 ]
 
-const rest = new REST({ version: '10' }).setToken(env.DISCORD_ACCESS_TOKEN)
+const rest = new REST({ version: '10' }).setToken(
+  process.env.DISCORD_ACCESS_TOKEN!
+)
 
 export async function registerCommands() {
   try {
     console.log('Started refreshing application (/) commands.')
 
-    await rest.put(Routes.applicationCommands(env.CLIENT_ID), {
+    await rest.put(Routes.applicationCommands(process.env.CLIENT_ID!), {
       body: commands,
     })
 
