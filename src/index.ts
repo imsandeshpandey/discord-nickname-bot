@@ -7,8 +7,9 @@ import {
 import {
   activeVotes,
   handleNicknameVoteCommand,
-} from './features/nickname-change'
+} from './command-handlers/nickname-change'
 import { Command, registerCommands } from './utils/register-commands'
+import { handleRNGCommand } from './command-handlers/rng'
 
 registerCommands()
 
@@ -32,6 +33,8 @@ client.on(Events.InteractionCreate, async (e) => {
   switch (e.commandName) {
     case Command.Nickname:
       return handleNicknameVoteCommand(e as ChatInputCommandInteraction)
+    case Command.RNG:
+      return handleRNGCommand(e as ChatInputCommandInteraction)
   }
 })
 

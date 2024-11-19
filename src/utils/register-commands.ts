@@ -1,10 +1,27 @@
 import { REST, Routes, SlashCommandBuilder } from 'discord.js'
 
 export enum Command {
+  RNG = 'rng',
   Nickname = 'nickname',
 }
 
 export const commands = [
+  new SlashCommandBuilder()
+    .setName(Command.RNG)
+    .setDescription('Generate a random number between (min) and (max)')
+    .addNumberOption((option) =>
+      option
+        .setName('min')
+        .setDescription('The minimum value')
+        .setRequired(true)
+    )
+    .addNumberOption((option) =>
+      option
+        .setName('max')
+        .setDescription('The maximum value')
+        .setRequired(true)
+    )
+    .toJSON(),
   new SlashCommandBuilder()
     .setName(Command.Nickname)
     .setDescription('Start a vote for nickname change')
