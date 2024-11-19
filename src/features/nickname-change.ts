@@ -3,12 +3,13 @@ import {
   EmbedBuilder,
   GuildMember,
   Message,
+  TextChannel,
 } from 'discord.js'
 
 export const activeVotes = new Map<string, NicknameVoteTracker>()
 
 class NicknameVoteTracker {
-  private interaction: ChatInputCommandInteraction
+  private channel: TextChannel
   private voteMessage: Message
   private targetMember: GuildMember
   private newNickname: string
@@ -18,14 +19,14 @@ class NicknameVoteTracker {
   private abortTimeout: () => void = () => {}
 
   constructor(
-    interaction: ChatInputCommandInteraction,
+    channel: TextChannel,
     voteMessage: Message,
     targetMember: GuildMember,
     newNickname: string,
     votingDuration: number,
     initiator: GuildMember
   ) {
-    this.interaction = interaction
+    this.channel = channel
     this.voteMessage = voteMessage
     this.targetMember = targetMember
     this.newNickname = newNickname
@@ -37,7 +38,7 @@ class NicknameVoteTracker {
     // Set timeout for vote duration
     const timeout = setTimeout(async () => {
       await this.concludeVote()
-    }, this.votingDuration * 60 * 1000)
+    }, this.votingDuration * 1 * 1000)
 
     this.abortTimeout = () => clearTimeout(timeout)
   }
@@ -50,11 +51,11 @@ class NicknameVoteTracker {
     if (responsibleMember) {
       content = `Vote deleted by <@${responsibleMember.id}>.`
     }
-
-    this.interaction.reply({
-      content,
-      ephemeral: true,
-    })
+    try {
+      this.channel.send(content)
+    } catch (error) {
+      console.error('Error canceling vote:', error)
+    }
   }
 
   private async concludeVote() {
@@ -134,6 +135,8 @@ export async function handleNicknameVoteCommand(
     return
   }
 
+  const channel = interaction.channel as TextChannel
+
   const initiator = interaction.member as GuildMember
 
   // Extract command options
@@ -182,7 +185,7 @@ export async function handleNicknameVoteCommand(
 
   // Start vote tracking
   const voteTracker = new NicknameVoteTracker(
-    interaction,
+    channel,
     voteMessage,
     targetMember,
     newNickname,
