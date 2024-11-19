@@ -1,3 +1,4 @@
+import { getNickname } from '@/utils/helpers'
 import {
   ChatInputCommandInteraction,
   EmbedBuilder,
@@ -196,8 +197,4 @@ export async function handleNicknameVoteCommand(
   activeVotes.set(voteMessage.id, voteTracker)
 
   voteTracker.startVoting()
-}
-
-function getNickname(user: GuildMember) {
-  return user.nickname || user.user.username
 }
