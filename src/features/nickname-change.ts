@@ -38,7 +38,7 @@ class NicknameVoteTracker {
     // Set timeout for vote duration
     const timeout = setTimeout(async () => {
       await this.concludeVote()
-    }, this.votingDuration * 1 * 1000)
+    }, this.votingDuration * 60 * 1000)
 
     this.abortTimeout = () => clearTimeout(timeout)
   }
